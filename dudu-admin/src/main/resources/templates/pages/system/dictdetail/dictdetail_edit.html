@@ -1,0 +1,104 @@
+<%
+DIRECTIVE SAFE_OUTPUT_OPEN;
+var headContent = {
+include("/pages/template/head.html"){}
+%>
+<script type="text/javascript">
+    var oper = {
+        save: function (id) {
+            if (!validForm()) {
+                return;
+            }
+
+            var title = '确认要保存该数据么？';
+            var id = $("[name='id']").val() || '0';
+            var url = 'system/dictdetail/save/' + id;
+            var params = $("form").serialize();
+            Confirm(title, function () {
+                $("[name='dictType']").val($('#dictType').val());
+                ajax_post(url, params, function (data) {
+                    if (data.code == 0) {
+                        closeIframe();
+                    } else {
+                        ErrorInfo('操作失败：' + data.msg);
+                    }
+                });
+            });
+        }
+    };
+
+    $(function(){
+        // 下拉框初始化
+        dudu.select("system/dict/data",$('#dictType'),'name','type','${model.dictType}');
+    });
+</script>
+
+<%
+};
+var bodyContent = {
+%>
+<form name="form1" action="" method="post" class="form-horizontal"
+      role="form">
+    <input type="hidden" name="id" value="${model.id}"/>
+    <table class="table">
+        <% // 列表头部%>
+        <tr>
+            <td>数据字典类型</td>
+            <td>
+                <input type="hidden" name="dictType" value="${model.dictType}" />
+                <select id="dictType" class="form-control" ${model.id!0 > 0?"disabled":""} >
+                    <option value="-1">--请选择--</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>名称</td>
+            <td>
+                <input class="form-control" type="text" name="name" value="${model.name }"/>
+            </td>
+        </tr>
+        <tr>
+            <td>代码</td>
+            <td>
+                <input class="form-control" type="text" name="code" value="${model.code }"/>
+            </td>
+        </tr>
+        <tr>
+            <td>排序号</td>
+            <td>
+                <input class="form-control" type="text" name="sort" value="${model.sort }"/>
+            </td>
+        </tr>
+        <tr>
+            <td>状态</td>
+            <td>
+                <label class="radio-inline">
+                    <input type="radio" name="status" id="" value="2" ${model.status==2?"checked":"" }> 隐藏
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="status" id="" value="1" ${model.status!=2?"checked":"" }> 显示
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>备注</td>
+            <td>
+                <textarea class="form-control" rows="3" cols="40" name="remark">${model.remark}</textarea>
+            </td>
+        </tr>
+    </table>
+
+    <div style="height: 50px;clear: both;">&nbsp;</div>
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container" style="padding: 5px 0px 5px 0px;text-align: center;">
+            <button class="btn btn-primary" onclick="oper.save(${model.id});return false;">保 存</button>
+            <button class="btn btn-default" onclick="closeIframe();return false;">关 闭</button>
+        </div>
+    </nav>
+</form>
+<%}; %>
+
+<% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
+<%}
+DIRECTIVE SAFE_OUTPUT_CLOSE;
+%>

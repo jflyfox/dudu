@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>错误${error.code!'Error'}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style type="text/css">
+        html,body{padding:0;margin:0;width:100%;font-size:18px;font-family:Helvetica;}
+        #error{width:100%;text-align:center;padding-top:1rem;}
+        #code{font-size:6rem;font-weight:bold;color:#fff;text-shadow: 0px 0px 2px #686868,0px 1px 1px #ddd,0px 2px 1px #d6d6d6,0px 3px 1px #ccc,0px 4px 1px #c5c5c5,0px 5px 1px #c1c1c1,0px 6px 1px #bbb,0px 7px 1px #777,0px 8px 3px rgba(100, 100, 100, 0.4),0px 9px 5px rgba(100, 100, 100, 0.1),0px 10px 7px rgba(100, 100, 100, 0.15),0px 11px 9px rgba(100, 100, 100, 0.2),0px 12px 11px rgba(100, 100, 100, 0.25),0px 13px 15px rgba(100, 100, 100, 0.3);}
+        #logo{margin:auto;width:7rem;height:5.5rem;line-height:5.5rem;font-size:4.5rem;font-weight:bold;border-radius:50%;box-shadow:0 2px 9px #999;background:-webkit-linear-gradient(#fff, #ececec);background:linear-gradient(#fff, #ececec);color:#626262;position:relative;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+        #logo:before,#logo:after{content:'';position:absolute;background:linear-gradient(-20deg,#ececec, #f1f1f1);bottom:0;right:1rem;height:1.2rem;width:1.2rem;transform:rotate(20deg)}
+        #logo:before{z-index:-1;box-shadow:2px 2px 9px #aaa;}
+        #logo:after{z-index:1}
+        #error-detail{box-sizing:border-box;padding:1rem;width:100%;font-size:1rem;opacity:1;-webkit-transition: all .3s ease-out .3s;transition: all .3s ease-out .3s;}
+        #error-detail table{border-collapse:collapse;width:100%;max-width:400px;margin:auto}
+        #error-detail tr td{line-height:2rem;word-break:break-all;word-wrap:break-word;border-top:1px solid #ccc;font-size:.8rem}
+        #error-detail tr td:last-child{color:#0074D9}
+        #error-detail tr td:first-child{width:5rem !important;vertical-align:middle;color:#111}
+        #error-detail tr:first-child td{border-top:none;}
+        #error-detail.hide{opacity:0;}
+    </style>
+</head>
+<body>
+<div id="error">
+    <div id="logo" onclick="document.querySelector('#error-detail').classList.toggle('hide')">!</div>
+    <div id="code">${error.code!'Error'}</div>
+</div>
+<div id="error-detail" class="hide">
+    <table>
+        <% if(error.uri!=null){ %>
+        <tr>
+            <td>请求地址</td>
+            <td>${error.uri}</td>
+        </tr>
+        <% } %>
+        <% if(error.code!=null){ %>
+        <tr>
+            <td>错误代码</td>
+            <td>${error.code}</td>
+        </tr>
+        <% } %>
+        <% if(error.exception!=null){ %>
+        <tr>
+            <td>错误类型</td>
+            <td>${error.exception}</td>
+        </tr>
+        <% }  %>
+        <% if(error.msg!=null){ %>
+        <tr>
+            <td>错误消息</td>
+            <td>${error.msg}</td>
+        </tr>
+        <% } %>
+        <% if(error.servlet!=null){ %>
+        <tr>
+            <td>Servlet</td>
+            <td>${error.servlet}</td>
+        </tr>
+        <% } %>
+        <tr>
+            <td colspan="2">如有疑问或需要帮助，请将此信息完整的截图发送给管理员。</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

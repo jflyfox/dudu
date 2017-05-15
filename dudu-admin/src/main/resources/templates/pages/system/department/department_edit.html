@@ -1,0 +1,81 @@
+<% DIRECTIVE SAFE_OUTPUT_OPEN; var headContent = {
+include("/pages/template/head.html"){} %>
+<script type="text/javascript">
+	var oper = {
+		save:function(id){
+			if(!validForm()) {
+				return false;
+			}
+
+            var title = '确认要保存该数据么？';
+            var id = $("[name='id']").val() || '0';
+            var url = 'system/department/save/'+id;
+            var params = $("form").serialize();
+            Confirm(title, function() {
+                ajax_post(url, params, function (data) {
+                    if(data.code==0){
+                        closeIframe();
+                    } else {
+                        ErrorInfo('操作失败：'+data.msg);
+                    }
+                });
+            });
+		}	
+	};
+</script>
+
+<% }; var bodyContent = { %>
+<form name="form1" action="" method="post" class="form-horizontal"
+	role="form">
+	<input type="hidden" name="id" value="${id}" />
+	<table class="table">
+		<% // 列表头部%>
+		<tr>
+			<td style="text-align: right;">父节点</td>
+			<td>
+				<select name="parentid" class="form-control" valid="vselect" validname="父节点">
+				<option value="0">--根节点--</option>
+				${selectParents }
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">机构名称</td>
+			<td><input class="form-control" type="text" name="name" value="${model.name }" valid='vtext' validname='机构名称' /></td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">序号</td>
+			<td><input class="form-control" type="text" name="sort" value="${model.sort }" valid='vnum_y' validname='序号' /></td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">机构编码</td>
+			<td><input class="form-control" type="text" name="code" value="${model.code }" validname='编码' /></td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">联系人</td>
+			<td><input class="form-control" type="text" name="linkman" value="${model.linkman }" /></td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">联系人电话</td>
+			<td><input class="form-control" type="text" name="linkmanNo" value="${model.linkmanNo }" /></td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">机构描述</td>
+			<td>
+				<textarea class="form-control" rows="3" cols="40" name="remark">${model.remark}</textarea>
+			</td>
+		</tr>
+	</table>
+
+	<div style="height: 50px; clear: both;">&nbsp;</div>
+	<nav class="navbar navbar-default navbar-fixed-bottom">
+		<div class="container"
+			style="padding: 5px 0px 5px 0px; text-align: center;">
+			<button class="btn btn-primary" onclick="oper.save();return false;">保 存</button>
+			<button class="btn btn-default" onclick="closeIframe();return false;">关 闭</button>
+		</div>
+	</nav>
+</form>
+<%}; %> <%
+layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){
+%> <%} DIRECTIVE SAFE_OUTPUT_CLOSE; %>

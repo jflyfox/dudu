@@ -1,0 +1,70 @@
+<%
+var headContent = {
+include("/pages/template/head.html"){}
+%>
+
+<script type="text/javascript" src="pages/resources/system/user.js"></script>
+
+<%
+};
+
+var bodyContent = {
+%>
+
+<!-- 菜单 -->
+<% include("/pages/template/menu.html"){} %>
+<div id="data_content">
+    <form name="form1" action="" method="post" class="form-inline" role="form">
+        <div class="tableSearch">
+            <% //查询列表 %>
+            <div class="form-group">
+                <input class="form-control" type="text" name="username" value="" placeholder="请输入用户名"/>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="realname" value="" placeholder="请输入真实姓名"/>
+            </div>
+            <div class="form-group">
+                <select name="usertype" class="form-control">
+                    <option value="-1">--请选择用户类型--</option>
+                    <option value="1">管理员</option>
+                    <option value="2">普通用户</option>
+                    <option value="3">前台用户</option>
+                    <option value="4">第三方用户</option>
+                    <option value="5">API用户</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="departid" class="form-control">
+                    <option value="-1">--请选择部门--</option>
+                    ${selectDepartments}
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-default" onclick="oper.list();" name="search">
+                <span class="glyphicon glyphicon-search"></span> 查 询
+            </button>
+            <button type="button" class="btn btn-default" onclick="resetForm();">
+                <span class="glyphicon glyphicon-refresh"></span> 重 置
+            </button>
+            <button type="button" class="btn btn-default" onclick="oper.add();">
+                <span class="glyphicon glyphicon-plus"></span> 新 增
+            </button>
+        </div>
+    </form>
+
+    <!-- 这里格式不能变 -->
+    <div id="jqGridEdit" style="display: none;">
+ <a href="javascript:void(0);" class="btn btn-sm btn-success" onclick="oper.view([id]);">查看</a>
+ <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.edit([id]);">修改</a>
+ <a href="javascript:void(0);" class="btn btn-sm btn-danger" onclick="oper.del([id]);">删除</a>
+ <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="oper.auth([id]);"
+   style="display: [show];">授权</a>
+    </div>
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+</div>
+<%}; %>
+
+
+<% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
+<%} %>

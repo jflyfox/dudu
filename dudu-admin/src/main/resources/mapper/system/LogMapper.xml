@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jflyfox.dudu.module.system.dao.LogMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,log_type as logType,oper_object as operObject,oper_table as operTable,oper_id as operId,oper_type as operType,oper_remark as operRemark,enable,update_time as updateTime,update_id as updateId,create_time as createTime,create_id as createId
+    </sql>
+
+    <select id="selectLogPage" resultType="com.jflyfox.dudu.module.system.model.SysLog">
+        <![CDATA[
+        select
+        t.id,t.log_type as logType,t.oper_object as operObject,t.oper_table as operTable,t.oper_id as operId,t.oper_type as operType,t.oper_remark as operRemark,t.enable,t.update_time as updateTime,t.update_id as updateId,t.create_time as createTime,t.create_id as createId
+        ,uu.username as updateName,uc.username as createName
+        from sys_log t
+        left join sys_user uu on t.update_id = uu.id
+        left join sys_user uc on t.create_id = uc.id
+        ${ew.sqlSegment}
+        ]]>
+    </select>
+
+</mapper>

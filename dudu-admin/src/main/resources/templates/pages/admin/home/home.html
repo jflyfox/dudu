@@ -1,0 +1,54 @@
+<% 
+DIRECTIVE SAFE_OUTPUT_OPEN;
+var headContent = {
+	include("/pages/template/head.html"){}
+%>
+<script type="text/javascript" src="/pages/admin/home/home.js"></script>
+<% include("/pages/includes/echarts.html"){} %>
+
+<script type="text/javascript">
+	var oper;
+	jQuery(function($) {
+		// 页面方法
+		oper = {
+			width : 900,
+			height : 600,
+			form : document.form1,
+			list : function() {
+				var url = 'admin/home';
+				this.form.action = url;
+				this.form.submit();
+			}
+		};
+		
+		
+		//显示Menu索引
+		showMenu('page_home');
+	});
+	
+</script>
+
+<%
+};
+%>
+
+<%
+var bodyContent = {
+%>
+	<!-- 菜单 -->
+	<% include("/pages/template/menu.html"){} %>
+
+	 <%
+	 	// 传递变量  
+	 	// 文章列表 articlelist 必填
+	 	// 默认图片 defalutimg 选填
+	 	var sessionUserId = isEmpty(session.session_user) ? 0: session.session_user.userid;
+	 %>
+<div class="container" style="margin-top: 10px;">
+	主页
+</div><!-- end container -->
+<%}; %>
+
+<% layout("/pages/template/_layout.html",{head:headContent,body:bodyContent}){ %>
+DIRECTIVE SAFE_OUTPUT_CLOSE;
+<%} %>
