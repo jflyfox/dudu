@@ -2,16 +2,14 @@ package com.jflyfox.dudu.component.base;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.jflyfox.dudu.component.common.Constants;
 import com.jflyfox.dudu.component.model.SessionUser;
 import com.jflyfox.dudu.component.util.DuduRespUtils;
-import com.jflyfox.dudu.component.util.EncryptUtils;
 import com.jflyfox.dudu.component.util.StringEscapeEditor;
-import com.jflyfox.dudu.module.system.model.SysUser;
 import com.jflyfox.dudu.module.system.service.ISessionAttrService;
 import com.jflyfox.util.DateUtils;
-import com.jflyfox.util.NumberUtils;
 import com.jflyfox.util.StrUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -38,6 +36,7 @@ public class BaseController extends BaseSupportController {
          */
         binder.registerCustomEditor(String.class, new StringEscapeEditor());
     }
+
     protected void renderMessage(String message) {
         renderMessage(message, "closeIframe();");
     }
@@ -75,8 +74,8 @@ public class BaseController extends BaseSupportController {
      * @return
      */
     public boolean validSessionUser() {
-        SessionUser sessionUser = getSessionUser();
-        return !(sessionUser == null || sessionUser.getId() <= 0);
+        Subject subject = SecurityUtils.getSubject();
+        return (subject.isAuthenticated() || subject.isRemembered());
     }
 
     /**
@@ -87,65 +86,14 @@ public class BaseController extends BaseSupportController {
      * @return
      */
     public SessionUser getSessionUser() {
-        SessionUser sessionUser = getSessionAttr(Constants.SESSION_USER);
-        try {
-            // 如果session没有，cookie有~那么就设置到Session
-            if (sessionUser == null) {
-                String cookieContent = getCookie(Constants.SESSION_USER);
-                if (cookieContent != null) {
-                    String key = EncryptUtils.dataDecrypt(cookieContent);
-                    if (StrUtils.isNotEmpty(key) && key.split(",").length == 2) {
-                        int userid = NumberUtils.parseInt(key.split(",")[0]);
-                        String time = key.split(",")[1]; // 如果需要可以做超时处理
-                        // 查询用户信息
-                        SysUser sysUser = sessionAttrService.getSysUser(userid);
-                        if (sysUser != null) {
-                            sessionUser = sessionAttrService.newSessionUser(sysUser);
-                            setSessionUser(sessionUser);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // 异常cookie重新登陆
-            removeSessionAttr(Constants.SESSION_USER);
-            removeCookie(Constants.SESSION_USER);
-
-            logger.error("cooke user异常:", e);
-            return null;
+        Subject subject = SecurityUtils.getSubject();
+        // 没有登录
+        if (!(subject.isAuthenticated() || subject.isRemembered())) {
+            return new SessionUser();
         }
+
+        SessionUser sessionUser = (SessionUser) subject.getPrincipal();
         return sessionUser;
-    }
-
-    /**
-     * 方法重写
-     * <p>
-     * 2015年8月2日 下午3:17:29 flyfox 369191470@qq.com
-     *
-     * @return
-     */
-    @SuppressWarnings("rawtypes")
-    public SessionUser setSessionUser(SessionUser user) {
-        setSessionAttr(Constants.SESSION_USER, user);
-        // 设置cookie，用id+password作为
-        String key = user.getId() + "," + DateUtils.getNow(DateUtils.YMDHMS);
-        String cookieContent = EncryptUtils.dataEncrypt(key);
-        setCookie(Constants.SESSION_USER, cookieContent, 7 * 24 * 60 * 60);
-
-        return user;
-    }
-
-    /**
-     * 方法重写
-     * <p>
-     * 2015年8月2日 下午3:17:29 flyfox 369191470@qq.com
-     *
-     * @return
-     */
-    public void removeSessionUser() {
-        removeSessionAttr(Constants.SESSION_USER);
-        // 删除cookie
-        removeCookie(Constants.SESSION_USER);
     }
 
     /**

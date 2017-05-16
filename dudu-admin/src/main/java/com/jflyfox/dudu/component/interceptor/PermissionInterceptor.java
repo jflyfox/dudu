@@ -2,7 +2,6 @@ package com.jflyfox.dudu.component.interceptor;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.jflyfox.dudu.component.common.Constants;
 import com.jflyfox.dudu.component.model.SessionUser;
 import com.jflyfox.dudu.module.system.model.SysMenu;
 import com.jflyfox.dudu.module.system.model.SysRoleMenu;
@@ -12,12 +11,12 @@ import com.jflyfox.dudu.module.system.service.IMenuService;
 import com.jflyfox.dudu.module.system.service.IRolemenuService;
 import com.jflyfox.dudu.module.system.service.IUserService;
 import com.jflyfox.dudu.module.system.service.IUserroleService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -46,8 +45,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
         List<SysMenu> menuList = menuService.selectList(menuWrapper);
 
         // 1. 拿到session中的userid；
-        HttpSession session = request.getSession(false);
-        SessionUser sessionUser = session != null ? (SessionUser) session.getAttribute(Constants.SESSION_USER) : null;
+        SessionUser sessionUser =  (SessionUser) SecurityUtils.getSubject().getPrincipal();
         // 用户没有登录不处理
         if (sessionUser == null || sessionUser.getId() == null)
             return true;

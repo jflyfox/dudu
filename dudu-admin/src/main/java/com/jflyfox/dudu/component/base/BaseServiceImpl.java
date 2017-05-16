@@ -112,8 +112,8 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
                 log.setOperType(operType.getValue());
                 log.setUpdateId(model.getUpdateId());
                 log.setUpdateTime(model.getUpdateTime());
-                log.setCreateId(model.getCreateId());
-                log.setCreateTime(model.getCreateTime());
+                log.setCreateId(model.getUpdateId());
+                log.setCreateTime(model.getUpdateTime());
                 logService.insert(log);
             }
         } catch (Exception e) {

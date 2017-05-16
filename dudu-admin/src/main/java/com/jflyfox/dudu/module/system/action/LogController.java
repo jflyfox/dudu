@@ -36,56 +36,6 @@ public class LogController extends BaseController {
         return view;
     }
 
-    @RequestMapping(value = "/add")
-    public ModelAndView add() {
-        ModelAndView view = new ModelAndView(path + "add.html");
-        return view;
-    }
-
-    @RequestMapping(value = "/edit/{id}")
-    public ModelAndView edit(@PathVariable Long id) {
-        SysLog model = service.selectById(id);
-        ModelAndView view = new ModelAndView(path + "edit.html");
-        view.addObject("model", model);
-        return view;
-    }
-
-    @RequestMapping(value = "/view/{id}")
-    public ModelAndView view(@PathVariable Long id) {
-        SysLog model = service.selectById(id);
-        ModelAndView view = new ModelAndView(path + "view.html");
-        view.addObject("model", model);
-        return view;
-    }
-
-    @SameUrlData
-    @RequestMapping(value = "/delete/{id}")
-    public Object delete(@PathVariable Long id) {
-        if (!service.deleteById(id)) {
-            return fail("删除失败");
-        }
-
-        return success();
-    }
-
-    @SameUrlData
-    @RequestMapping(value = "/save/{id}")
-    public Object save(@PathVariable Long id, @ModelAttribute SysLog model) {
-        Long userid = getSessionUser().getId();
-        String now = getNow();
-        model.setUpdateId(userid);
-        model.setUpdateTime(now);
-        if (id != null && id > 0) { // 更新
-            service.updateById(model);
-        } else { // 新增
-            model.setCreateId(userid);
-            model.setCreateTime(now);
-            service.insert(model);
-        }
-
-        return success();
-    }
-
     @RequestMapping(value = "/jqgrid")
     public Object jqgrid(JqgridBean bean, @ModelAttribute SysLog attr) {
         Wrapper<SysLog> wrapper = new EntityWrapper<>();
@@ -99,7 +49,9 @@ public class LogController extends BaseController {
             wrapper.eq("t.log_type", attr.getLogType());
         }
         if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy(bean.getOrderBy());
+            wrapper.orderBy("t." + bean.getOrderBy());
+        } else {
+            wrapper.orderBy("t.id desc");
         }
 
         Page<SysLog> pageData = service.selectLogPage(bean.getPagination(), wrapper);

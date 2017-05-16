@@ -6,11 +6,6 @@ package com.jflyfox.dudu.component.common;
 public class Constants {
 
     /**
-     * 用户Session
-     */
-    public static final String SESSION_USER = "sessionUser";
-
-    /**
      * 后台路径
      */
     public static final String[] backPaths = {"demo", "system", "report", "admin"};

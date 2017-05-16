@@ -73,8 +73,6 @@ public class MenuController extends BaseController {
         String now = getNow();
         model.setUpdateId(userid);
         model.setUpdateTime(now);
-        model.setCreateId(userid);
-        model.setCreateTime(now);
         model.setId(id);
 
         if (!service.deleteByIdLog(model)) {
@@ -125,6 +123,8 @@ public class MenuController extends BaseController {
 //        }
         if (StrUtils.isNotEmpty(bean.getOrderBy())) {
             wrapper.orderBy("t." + bean.getOrderBy());
+        } else {
+            wrapper.orderBy("t.id desc");
         }
 
         Page<SysMenu> pageData = service.selectMenuPage(bean.getPagination(), wrapper);

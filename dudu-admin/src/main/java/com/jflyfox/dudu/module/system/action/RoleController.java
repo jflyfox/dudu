@@ -68,8 +68,6 @@ public class RoleController extends BaseController {
         String now = getNow();
         model.setUpdateId(userid);
         model.setUpdateTime(now);
-        model.setCreateId(userid);
-        model.setCreateTime(now);
         model.setId(id);
 
         if (!service.deleteByIdLog(model)) {
@@ -105,6 +103,8 @@ public class RoleController extends BaseController {
         }
         if (StrUtils.isNotEmpty(bean.getOrderBy())) {
             wrapper.orderBy("t." + bean.getOrderBy());
+        } else {
+            wrapper.orderBy("t.id desc");
         }
 
         Page<SysRole> pageData = service.selectRolePage(bean.getPagination(), wrapper);

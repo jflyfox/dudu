@@ -65,8 +65,6 @@ public class DictController extends BaseController {
         String now = getNow();
         model.setUpdateId(userid);
         model.setUpdateTime(now);
-        model.setCreateId(userid);
-        model.setCreateTime(now);
         model.setId(id);
 
         if (!service.deleteByIdLog(model)) {
@@ -101,7 +99,9 @@ public class DictController extends BaseController {
             wrapper.like("t.name", attr.getName());
         }
         if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy(bean.getOrderBy());
+            wrapper.orderBy("t." + bean.getOrderBy());
+        } else {
+            wrapper.orderBy("t.id desc");
         }
 
         Page<SysDict> pageData = service.selectDictPage(bean.getPagination(), wrapper);
