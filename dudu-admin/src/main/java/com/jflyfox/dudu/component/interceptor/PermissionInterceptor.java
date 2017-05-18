@@ -3,6 +3,7 @@ package com.jflyfox.dudu.component.interceptor;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.jflyfox.dudu.component.model.SessionUser;
+import com.jflyfox.dudu.component.util.DuduWebUtils;
 import com.jflyfox.dudu.module.system.model.SysMenu;
 import com.jflyfox.dudu.module.system.model.SysRoleMenu;
 import com.jflyfox.dudu.module.system.model.SysUser;
@@ -39,13 +40,23 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
+        // 不是后台的，跳过
+        if (!DuduWebUtils.isBack(request)) {
+            return true;
+        }
+
+        // 是后台忽略路径，跳过
+        if (DuduWebUtils.isBackAnon(request)) {
+            return true;
+        }
+
         // 权限处理,获取所有菜单信息；
         Wrapper<SysMenu> menuWrapper = new EntityWrapper<>();
         menuWrapper.orderBy("sort,id desc");
         List<SysMenu> menuList = menuService.selectList(menuWrapper);
 
         // 1. 拿到session中的userid；
-        SessionUser sessionUser =  (SessionUser) SecurityUtils.getSubject().getPrincipal();
+        SessionUser sessionUser = (SessionUser) SecurityUtils.getSubject().getPrincipal();
         // 用户没有登录不处理
         if (sessionUser == null || sessionUser.getId() == null)
             return true;

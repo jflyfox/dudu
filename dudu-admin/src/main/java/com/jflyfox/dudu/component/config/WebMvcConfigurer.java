@@ -1,10 +1,7 @@
 package com.jflyfox.dudu.component.config;
 
 import com.jflyfox.dudu.component.common.Constants;
-import com.jflyfox.dudu.component.interceptor.CommonAttrInterceptor;
-import com.jflyfox.dudu.component.interceptor.LoginInterceptor;
-import com.jflyfox.dudu.component.interceptor.PermissionInterceptor;
-import com.jflyfox.dudu.component.interceptor.SQLInjectInterceptor;
+import com.jflyfox.dudu.component.interceptor.*;
 import com.jflyfox.dudu.component.interceptor.resubmit.FormTokenInterceptor;
 import com.jflyfox.dudu.component.interceptor.resubmit.SameUrlDataInterceptor;
 import org.slf4j.Logger;
@@ -23,8 +20,10 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
     public void addInterceptors(final InterceptorRegistry registry) {
         logger.warn("####addInterceptors init start......");
 
+        // 时间拦截器
+        registry.addInterceptor(getTimerInterceptor()).addPathPatterns("/**");
         // SQL注入拦截器拦截
-//        registry.addInterceptor(getSQLInjectInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(getSQLInjectInterceptor()).addPathPatterns("/**");
         // 后台登陆拦截
         registry.addInterceptor(getLoginInterceptor()).addPathPatterns(Constants.getBackPatternsList());
         // 权限拦截器拦截器拦截
@@ -72,5 +71,10 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
     @Bean
     public CommonAttrInterceptor getCommonAttrInterceptor() {
         return new CommonAttrInterceptor();
+    }
+
+    @Bean
+    public TimerInterceptor getTimerInterceptor() {
+        return new TimerInterceptor();
     }
 }

@@ -1,7 +1,11 @@
 package com.jflyfox.dudu.component.config;
 
+import com.jflyfox.dudu.component.common.Constants;
+import com.jflyfox.dudu.component.filter.JspDispatcherFilter;
 import com.jflyfox.dudu.component.shiro.RetryLimitCredentialsMatcher;
 import com.jflyfox.dudu.component.shiro.ShiroDbRealm;
+import com.jflyfox.dudu.component.shiro.filter.BackFilter;
+import com.jflyfox.dudu.component.shiro.filter.LoginUserFilter;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
@@ -18,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -81,63 +86,46 @@ public class ShiroConfig {
 
     @Bean("shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean(org.apache.shiro.mgt.SecurityManager securityManager) throws IOException {
+//        anon  不需要认证
+//        authc 需要认证
+//        user  验证通过或RememberMe登录的都可以
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         factoryBean.setSecurityManager(securityManager);
-        factoryBean.setLoginUrl("/login");
+        factoryBean.setLoginUrl("/login"); // 前台Login
         Map<String, Filter> filters = new LinkedHashMap<String, Filter>();
-//        filters.put("backSite", new BackSiteFilter(beanFactory));
-//        filters.put("authc", new CmsAuthenticationFilter(beanFactory));
-//        filters.put("user", new CmsUserFilter());
-//        filters.put("logout", new CmsLogoutFilter(beanFactory));
+        filters.put("back", new BackFilter());
+//        filters.put("authc", new AuthenticationFilter());
+        filters.put("user", new LoginUserFilter());
+//        filters.put("logout", new LogoutFilter());
         factoryBean.setFilters(filters);
-//        Map<String, String> filterChainDefinitionMap = propertiesHelper()
-//                .getSortedMap("shiroFilterChainDefinitionMap.");
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-//         filterChainDefinitionMap.put("/*", "anon");
-//         filterChainDefinitionMap.put("*", "anon");
-//         filterChainDefinitionMap.put("*.jsp", "anon");
-        filterChainDefinitionMap.put("/login", "authc");
-        filterChainDefinitionMap.put("/logout", "logout");
-//         filterChainDefinitionMap.put("/my", "user");
-//         filterChainDefinitionMap.put("/my/**", "user");
-//         filterChainDefinitionMap.put("/cmscp/", "backSite,anon");
-//         filterChainDefinitionMap.put("/cmscp/index.do", "backSite,anon");
-//         filterChainDefinitionMap.put("/cmscp/login.do", "backSite,authc");
-//         filterChainDefinitionMap.put("/cmscp/logout.do", "backSite,logout");
-//         filterChainDefinitionMap.put("/cmscp/**", "backSite,user");
+        filterChainDefinitionMap.put("/*", "anon");
+        filterChainDefinitionMap.put("*.jsp", "anon");
+
+        // 不认证后台路径
+        for (int i = 0; i < Constants.BACK_ANON_PATHS.length; i++) {
+            filterChainDefinitionMap.put("/" + Constants.BACK_ANON_PATHS[i], "anon");
+        }
+        // 后台认证路径
+        for (int i = 0; i < Constants.BACK_PATHS.length; i++) {
+            String urlKey = "/" + Constants.BACK_PATHS[i] + "/**";
+            filterChainDefinitionMap.put(urlKey, "back,user");
+        }
+
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return factoryBean;
     }
 
-    // @Bean
-    // public FilterRegistrationBean timerFilterRegistrationBean() {
-    // FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
-    // filterRegistration.setFilter(new TimerFilter());
-    // filterRegistration.setEnabled(true);
-    // filterRegistration.addUrlPatterns("/*");
-    // filterRegistration.setDispatcherTypes(DispatcherType.REQUEST);
-    // return filterRegistration;
-    // }
-
-//    @Bean
-//    public FilterRegistrationBean jspDispatcherFilterRegistrationBean() {
-//        FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
-//        filterRegistration.setFilter(new JspDispatcherFilter());
-//        filterRegistration.setEnabled(true);
-//        filterRegistration.addInitParameter("prefix", "/jsp");
-//        filterRegistration.addUrlPatterns("*.jsp");
-//        filterRegistration.setDispatcherTypes(DispatcherType.REQUEST);
-//        return filterRegistration;
-//    }
-//
-//    @Bean
-//    public FilterRegistrationBean openEntityManagerInViewFilterRegistrationBean() {
-//        FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
-//        filterRegistration.setFilter(new OpenEntityManagerInViewFilter());
-//        filterRegistration.setEnabled(true);
-//        filterRegistration.addUrlPatterns("/*");
-//        return filterRegistration;
-//    }
+    @Bean
+    public FilterRegistrationBean jspDispatcherFilterRegistrationBean() {
+        FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
+        filterRegistration.setFilter(new JspDispatcherFilter());
+        filterRegistration.setEnabled(true);
+        filterRegistration.addInitParameter("prefix", "/jsp");
+        filterRegistration.addUrlPatterns("*.jsp");
+        filterRegistration.setDispatcherTypes(DispatcherType.REQUEST);
+        return filterRegistration;
+    }
 
     @Bean
     public FilterRegistrationBean shiroFilterRegistrationBean() {
