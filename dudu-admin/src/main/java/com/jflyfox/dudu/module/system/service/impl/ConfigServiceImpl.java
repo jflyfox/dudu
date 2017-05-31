@@ -4,12 +4,16 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.common.ConfigConstants;
 import com.jflyfox.dudu.module.system.dao.ConfigMapper;
 import com.jflyfox.dudu.module.system.model.SysConfig;
 import com.jflyfox.dudu.module.system.service.IConfigService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 系统配置表 服务层口层
@@ -19,9 +23,17 @@ import java.util.List;
 @Service
 public class ConfigServiceImpl extends BaseServiceImpl<ConfigMapper, SysConfig> implements IConfigService {
 
+    public static final String CACHENAMES_CONFIG = "configserviceimpl";
+    public static final String CACHE_CONFIG_KEY = "'config'";
+
     public Page<SysConfig> selectConfigPage(Page<SysConfig> page, Wrapper<SysConfig> wrapper) {
         page.setRecords(baseMapper.selectConfigPage(page, wrapper));
         return page;
+    }
+
+    @Override
+    public boolean debug() {
+        return "true".equals(getValue(ConfigConstants.SYSTEM_DEBUG));
     }
 
     public String selectType(Long selected) {
@@ -41,5 +53,40 @@ public class ConfigServiceImpl extends BaseServiceImpl<ConfigMapper, SysConfig> 
             sb.append("</option>");
         });
         return sb.toString();
+    }
+
+    @CacheEvict(cacheNames = CACHENAMES_CONFIG, key = CACHE_CONFIG_KEY)
+    @Override
+    public boolean insertLog(SysConfig entity) {
+        return super.insertLog(entity);
+    }
+
+    @CacheEvict(cacheNames = CACHENAMES_CONFIG, key = CACHE_CONFIG_KEY)
+    @Override
+    public boolean updateByIdLog(SysConfig entity) {
+        return super.updateByIdLog(entity);
+    }
+
+    @CacheEvict(cacheNames = CACHENAMES_CONFIG, key = CACHE_CONFIG_KEY)
+    @Override
+    public boolean deleteByIdLog(SysConfig entity) {
+        return super.deleteByIdLog(entity);
+    }
+
+    public String getValue(String key) {
+        Optional<SysConfig> optional = getList().stream().filter(config -> config.getKey().equals(key)).findFirst();
+        return optional.map(u -> u.getValue()).orElse(null);
+    }
+
+    public String getCode(String key) {
+        Optional<SysConfig> optional = getList().stream().filter(config -> config.getKey().equals(key)).findFirst();
+        return optional.map(u -> u.getCode()).orElse(null);
+    }
+
+    @Cacheable(cacheNames = CACHENAMES_CONFIG, key = CACHE_CONFIG_KEY)
+    public List<SysConfig> getList() {
+        Wrapper<SysConfig> wrapper = new EntityWrapper<>();
+        wrapper.orderBy("sort,create_time desc");
+        return selectList(wrapper);
     }
 }

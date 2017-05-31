@@ -25,3 +25,12 @@
 
 ### 使用框架 
 spring session + redis 支持session集群化，让session通过redis保存
+
+### 分布式系统搭建说明
+* 操作加入token；
+* 如果加入userid或者用户唯一标识锁；（redis或者zookeeper）
+* url关键信息或者整串进行加密，避免信息泄露；
+* url加入校验和参数，避免参数篡改；
+* 用户登陆后放回user token，每次请求携带，进行身份验证；
+* session使用类似于spring session redis；避免单节点session使用；(后台系统登录 或者 自己传sessionId)
+* 登陆可以借助cookie实现集群；

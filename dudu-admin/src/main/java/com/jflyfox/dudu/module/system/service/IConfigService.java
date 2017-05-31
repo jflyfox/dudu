@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.jflyfox.dudu.component.base.IBaseService;
 import com.jflyfox.dudu.module.system.model.SysConfig;
 
+import java.util.List;
+
 /**
  * 系统配置表 服务接口层
  *
@@ -28,4 +30,34 @@ public interface IConfigService extends IBaseService<SysConfig> {
      * @return
      */
     String selectType(Long selected);
+
+    /**
+     * 获取值
+     *
+     * @param key
+     * @return
+     */
+    String getValue(String key);
+
+    /**
+     * 获取编码
+     *
+     * @param key
+     * @return
+     */
+    String getCode(String key);
+
+    /**
+     * 获取列表
+     *
+     * @return
+     */
+    List<SysConfig> getList();
+
+    /**
+     * 是否开启debug
+     *
+     * @return
+     */
+    boolean debug();
 }

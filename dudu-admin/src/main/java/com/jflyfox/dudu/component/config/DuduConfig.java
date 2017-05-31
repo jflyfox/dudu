@@ -1,5 +1,6 @@
 package com.jflyfox.dudu.component.config;
 
+import com.alibaba.fastjson.parser.ParserConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import javax.annotation.PreDestroy;
 @Configuration
 @Order(100)
 public class DuduConfig {
+
     @Bean
     public Dudu dudu() {
         return new Dudu();
@@ -28,6 +30,8 @@ class Dudu {
     @PostConstruct
     public void init(){
         logger.warn("####dudu init");
+        // 打开fastjson autotype 功能
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
     }
 
     public Dudu() {

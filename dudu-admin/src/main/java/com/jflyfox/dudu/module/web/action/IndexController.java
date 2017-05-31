@@ -1,6 +1,7 @@
 package com.jflyfox.dudu.module.web.action;
 
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,6 +22,7 @@ public class IndexController {
     }
 
     @RequestMapping("/test")
+    @Cacheable(cacheNames = "ttttt")
     public String test() {
         return "ok";
     }

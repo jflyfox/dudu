@@ -59,8 +59,8 @@ public class ShiroConfig {
         return realm;
     }
 
-    @Bean("cacheManager")
-    public CacheManager shiroEhCacheManager() throws IOException {
+    @Bean("shiroCacheManager")
+    public CacheManager shiroCacheManager() throws IOException {
         return new MemoryConstrainedCacheManager();
     }
 
