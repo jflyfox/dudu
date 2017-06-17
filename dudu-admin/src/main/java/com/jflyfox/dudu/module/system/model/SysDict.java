@@ -7,7 +7,7 @@ import com.jflyfox.dudu.component.base.BaseModel;
 import java.io.Serializable;
 
 @TableName(value = "sys_dict")
-public class SysDict extends BaseModel<SysDict> {
+public class SysDict extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,7 +23,7 @@ public class SysDict extends BaseModel<SysDict> {
     private String remark;  // 备注
     // columns END
 
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return id;
     }
 

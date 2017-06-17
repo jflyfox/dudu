@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
 @TableName(value = "sys_role_menu")
-public class SysRoleMenu extends Model<SysRoleMenu> {
+public class SysRoleMenu extends Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,7 +21,7 @@ public class SysRoleMenu extends Model<SysRoleMenu> {
     private Long menuid;  // 菜单id
     // columns END
 
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return id;
     }
 

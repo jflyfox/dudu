@@ -1,8 +1,9 @@
 package com.jflyfox.dudu.module.admin.service;
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.IBaseService;
+import com.jflyfox.dudu.component.model.JqgridBean;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.admin.model.TbContact;
 
 /**
@@ -19,6 +20,6 @@ public interface IContactService extends IBaseService<TbContact> {
      * @param wrapper
      * @return
      */
-    Page<TbContact> selectContactPage(Page<TbContact> page, Wrapper<TbContact> wrapper);
+    PageInfo<TbContact> selectContactPage(Query query);
 
 }

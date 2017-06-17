@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
 @TableName(value = "sys_menu")
-public class SysMenu extends BaseModel<SysMenu> {
+public class SysMenu extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public class SysMenu extends BaseModel<SysMenu> {
     @TableField(exist = false)
     private String parentName;  // 上级名称
 
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return id;
     }
 

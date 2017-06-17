@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
 @TableName(value = "sys_log")
-public class SysLog extends BaseModel<SysLog> {
+public class SysLog extends BaseModel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +36,7 @@ public class SysLog extends BaseModel<SysLog> {
 	private String operRemark;  // 操作备注
 	// columns END
 
-	protected Serializable pkVal() {
+	public Serializable pkVal() {
 		return id;
 	}
 

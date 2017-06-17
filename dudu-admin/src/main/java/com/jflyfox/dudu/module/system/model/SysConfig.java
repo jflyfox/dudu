@@ -8,7 +8,7 @@ import com.jflyfox.dudu.component.base.BaseModel;
 import java.io.Serializable;
 
 @TableName(value = "sys_config")
-public class SysConfig extends BaseModel<SysConfig> {
+public class SysConfig extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +33,7 @@ public class SysConfig extends BaseModel<SysConfig> {
     @TableField(exist = false)
     private String typeName; // 类型名称
 
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return id;
     }
 

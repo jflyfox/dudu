@@ -8,7 +8,7 @@ import com.jflyfox.dudu.component.base.BaseModel;
 import java.io.Serializable;
 
 @TableName(value = "sys_department")
-public class SysDepartment extends BaseModel<SysDepartment> {
+public class SysDepartment extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class SysDepartment extends BaseModel<SysDepartment> {
     @TableField(exist = false)
     private String parentName;  // 上级机构名称
 
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return id;
     }
 

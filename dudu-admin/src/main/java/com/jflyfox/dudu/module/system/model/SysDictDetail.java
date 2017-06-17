@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
 @TableName(value = "sys_dict_detail")
-public class SysDictDetail extends BaseModel<SysDictDetail> {
+public class SysDictDetail extends BaseModel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,7 @@ public class SysDictDetail extends BaseModel<SysDictDetail> {
 	private String remark;  // 备注
 	// columns END
 
-	protected Serializable pkVal() {
+	public Serializable pkVal() {
 		return id;
 	}
 

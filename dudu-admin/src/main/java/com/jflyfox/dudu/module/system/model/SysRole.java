@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
 @TableName(value = "sys_role")
-public class SysRole extends BaseModel<SysRole> {
+public class SysRole extends BaseModel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class SysRole extends BaseModel<SysRole> {
 	private String remark;  // 说明//textarea
 	// columns END
 
-	protected Serializable pkVal() {
+	public Serializable pkVal() {
 		return id;
 	}
 

@@ -53,7 +53,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
         Serializable id = null;
         if (entity instanceof BaseModel) {
             BaseModel model = (BaseModel) entity;
-            id = model.pkValue();
+            id = model.pkVal();
         } else {
             throw new InvalidParameterException("entity is not BaseModel");
         }
@@ -96,7 +96,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
                 String tableName = tableInfo.getTableName();
                 String keyProperty = tableInfo.getKeyProperty();
                 BaseModel model = (BaseModel) entity;
-                Long primaryKey = (Long) model.pkValue();
+                Long primaryKey = (Long) model.pkVal();
 
                 Wrapper<SysDictDetail> wrapper = new EntityWrapper<>();
                 wrapper.eq("dict_type", "systemLog").eq("name", tableName);

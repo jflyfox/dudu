@@ -1,11 +1,17 @@
 package com.jflyfox.dudu.module.admin.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.model.JqgridBean;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.admin.dao.ContactMapper;
 import com.jflyfox.dudu.module.admin.model.TbContact;
 import com.jflyfox.dudu.module.admin.service.IContactService;
+import com.jflyfox.util.StrUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,8 +22,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContactServiceImpl extends BaseServiceImpl<ContactMapper, TbContact> implements IContactService {
 
-    public Page<TbContact> selectContactPage(Page<TbContact> page, Wrapper<TbContact> wrapper) {
-        page.setRecords(baseMapper.selectContactPage(page, wrapper));
-        return page;
+    public PageInfo<TbContact> selectContactPage(Query query) {
+        PageHelper.startPage(query.getPage(), query.getRows());
+        PageInfo<TbContact> pageInfo = new PageInfo<TbContact>(baseMapper.selectContactPage(query));
+
+//        Page page = bean.getPagination();
+//        page.setRecords(baseMapper.selectContactPage(wrapper));
+        return pageInfo;
     }
 }

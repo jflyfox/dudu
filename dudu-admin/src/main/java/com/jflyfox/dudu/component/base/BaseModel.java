@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 
 import java.io.Serializable;
 
-public abstract class BaseModel<T extends BaseModel> extends Model<T> implements Serializable {
+public abstract class BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,14 +24,7 @@ public abstract class BaseModel<T extends BaseModel> extends Model<T> implements
     @TableField(exist = false)
     private String createName;  // 创建人
 
-    /**
-     * 获取主键值
-     *
-     * @return
-     */
-    public Serializable pkValue() {
-        return pkVal();
-    }
+    public abstract Serializable pkVal();
 
     public Integer getEnable() {
         return enable;

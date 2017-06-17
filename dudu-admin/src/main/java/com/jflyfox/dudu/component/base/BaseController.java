@@ -2,6 +2,7 @@ package com.jflyfox.dudu.component.base;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.model.SessionUser;
 import com.jflyfox.dudu.component.util.DuduRespUtils;
 import com.jflyfox.dudu.component.util.StringEscapeEditor;
@@ -129,6 +130,15 @@ public class BaseController extends BaseSupportController {
         json.put("total", pageData.getPages());
         json.put("records", pageData.getTotal());
         json.put("rows", pageData.getRecords());
+        return json;
+    }
+
+    protected JSONObject getJqgridList(PageInfo pageData) {
+        JSONObject json = new JSONObject();
+        json.put("page", pageData.getPageNum());
+        json.put("total", pageData.getPages());
+        json.put("records", pageData.getTotal());
+        json.put("rows", pageData.getList());
         return json;
     }
 }

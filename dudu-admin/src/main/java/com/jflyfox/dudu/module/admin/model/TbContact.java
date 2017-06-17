@@ -7,7 +7,7 @@ import com.jflyfox.dudu.component.base.BaseModel;
 import java.io.Serializable;
 
 @TableName(value = "tb_contact")
-public class TbContact extends BaseModel<TbContact> {
+public class TbContact extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,10 +29,9 @@ public class TbContact extends BaseModel<TbContact> {
     private String remark;  // 说明
     // columns END
 
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
         return id;
     }
-
 
     public Long getId() {
         return id;
