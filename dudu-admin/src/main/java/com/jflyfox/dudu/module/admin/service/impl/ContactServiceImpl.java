@@ -25,9 +25,6 @@ public class ContactServiceImpl extends BaseServiceImpl<ContactMapper, TbContact
     public PageInfo<TbContact> selectContactPage(Query query) {
         PageHelper.startPage(query.getPage(), query.getRows());
         PageInfo<TbContact> pageInfo = new PageInfo<TbContact>(baseMapper.selectContactPage(query));
-
-//        Page page = bean.getPagination();
-//        page.setRecords(baseMapper.selectContactPage(wrapper));
         return pageInfo;
     }
 }
