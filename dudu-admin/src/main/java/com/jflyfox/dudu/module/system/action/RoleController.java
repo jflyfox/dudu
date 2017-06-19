@@ -1,15 +1,12 @@
 package com.jflyfox.dudu.module.system.action;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseController;
-import com.jflyfox.dudu.component.model.JqgridBean;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.component.model.resubmit.SameUrlData;
 import com.jflyfox.dudu.module.system.model.SysMenu;
 import com.jflyfox.dudu.module.system.model.SysRole;
 import com.jflyfox.dudu.module.system.service.IRoleService;
-import com.jflyfox.util.StrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -96,19 +93,10 @@ public class RoleController extends BaseController {
     }
 
     @RequestMapping(value = "/jqgrid")
-    public Object jqgrid(JqgridBean bean, @ModelAttribute SysRole attr) {
-        Wrapper<SysRole> wrapper = new EntityWrapper<>();
-        if (StrUtils.isNotEmpty(attr.getName())) {
-            wrapper.like("t.name", attr.getName());
-        }
-        if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy("t." + bean.getOrderBy());
-        } else {
-            wrapper.orderBy("t.id desc");
-        }
-
-        Page<SysRole> pageData = service.selectRolePage(bean.getPagination(), wrapper);
-
+    public Object jqgrid(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        PageInfo<SysRole> pageData = service.selectRolePage(query);
         return getJqgridList(pageData);
     }
 

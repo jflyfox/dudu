@@ -2,9 +2,12 @@ package com.jflyfox.dudu.module.system.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
 import com.jflyfox.dudu.component.common.ConfigConstants;
+import com.jflyfox.dudu.component.model.Query;
+import com.jflyfox.dudu.module.admin.model.TbContact;
 import com.jflyfox.dudu.module.system.dao.ConfigMapper;
 import com.jflyfox.dudu.module.system.model.SysConfig;
 import com.jflyfox.dudu.module.system.service.IConfigService;
@@ -26,9 +29,10 @@ public class ConfigServiceImpl extends BaseServiceImpl<ConfigMapper, SysConfig> 
     public static final String CACHENAMES_CONFIG = "configserviceimpl";
     public static final String CACHE_CONFIG_KEY = "'config'";
 
-    public Page<SysConfig> selectConfigPage(Page<SysConfig> page, Wrapper<SysConfig> wrapper) {
-        page.setRecords(baseMapper.selectConfigPage(page, wrapper));
-        return page;
+    public PageInfo<SysConfig> selectConfigPage(Query query) {
+        PageHelper.startPage(query.getPage(), query.getRows());
+        PageInfo<SysConfig> pageInfo = new PageInfo<SysConfig>(baseMapper.selectConfigPage(query));
+        return pageInfo;
     }
 
     @Override

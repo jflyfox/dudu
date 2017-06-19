@@ -2,8 +2,10 @@ package com.jflyfox.dudu.module.system.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.dao.DepartmentMapper;
 import com.jflyfox.dudu.module.system.model.SysDepartment;
 import com.jflyfox.dudu.module.system.service.IDepartmentService;
@@ -19,9 +21,10 @@ import java.util.List;
 @Service
 public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentMapper, SysDepartment> implements IDepartmentService {
 
-    public Page<SysDepartment> selectDepartmentPage(Page<SysDepartment> page, Wrapper<SysDepartment> wrapper) {
-        page.setRecords(baseMapper.selectDepartmentPage(page, wrapper));
-        return page;
+    public PageInfo<SysDepartment> selectDepartmentPage(Query query) {
+        PageHelper.startPage(query.getPage(), query.getRows());
+        PageInfo<SysDepartment> pageInfo = new PageInfo<SysDepartment>(baseMapper.selectDepartmentPage(query));
+        return pageInfo;
     }
 
     public String selectDepart(long selected) {

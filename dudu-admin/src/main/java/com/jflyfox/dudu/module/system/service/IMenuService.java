@@ -1,8 +1,8 @@
 package com.jflyfox.dudu.module.system.service;
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.IBaseService;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.model.SysMenu;
 
 /**
@@ -15,11 +15,10 @@ public interface IMenuService extends IBaseService<SysMenu> {
     /**
      * 分页查询
      *
-     * @param page
-     * @param wrapper
+     * @param query
      * @return
      */
-    Page<SysMenu> selectMenuPage(Page<SysMenu> page, Wrapper<SysMenu> wrapper);
+    PageInfo<SysMenu> selectMenuPage(Query query);
 
     /**
      * 获取菜单下拉框

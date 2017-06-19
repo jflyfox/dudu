@@ -1,20 +1,17 @@
 package com.jflyfox.dudu.module.system.action;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseController;
-import com.jflyfox.dudu.component.model.JqgridBean;
-import com.jflyfox.dudu.component.model.resubmit.SameUrlData;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.model.SysLog;
 import com.jflyfox.dudu.module.system.service.ILogService;
-import com.jflyfox.util.StrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
 
 /**
  * 日志 控制层
@@ -37,25 +34,10 @@ public class LogController extends BaseController {
     }
 
     @RequestMapping(value = "/jqgrid")
-    public Object jqgrid(JqgridBean bean, @ModelAttribute SysLog attr) {
-        Wrapper<SysLog> wrapper = new EntityWrapper<>();
-        if (StrUtils.isNotEmpty(attr.getOperObject())) {
-            wrapper.like("t.oper_object", attr.getOperObject());
-        }
-        if (StrUtils.isNotEmpty(attr.getOperTable())) {
-            wrapper.like("t.oper_table", attr.getOperTable());
-        }
-        if (attr.getLogType() != null && attr.getLogType() > 0) {
-            wrapper.eq("t.log_type", attr.getLogType());
-        }
-        if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy("t." + bean.getOrderBy());
-        } else {
-            wrapper.orderBy("t.id desc");
-        }
-
-        Page<SysLog> pageData = service.selectLogPage(bean.getPagination(), wrapper);
-
+    public Object jqgrid(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        PageInfo<SysLog> pageData = service.selectLogPage(query);
         return getJqgridList(pageData);
     }
 

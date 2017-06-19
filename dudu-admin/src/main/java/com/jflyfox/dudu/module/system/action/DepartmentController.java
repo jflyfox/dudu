@@ -2,18 +2,18 @@ package com.jflyfox.dudu.module.system.action;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseController;
-import com.jflyfox.dudu.component.model.JqgridBean;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.component.model.resubmit.SameUrlData;
 import com.jflyfox.dudu.module.system.model.SysDepartment;
 import com.jflyfox.dudu.module.system.service.IDepartmentService;
-import com.jflyfox.util.StrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 组织机构管理
@@ -109,19 +109,10 @@ public class DepartmentController extends BaseController {
     }
 
     @RequestMapping(value = "/jqgrid")
-    public Object jqgrid(JqgridBean bean, @ModelAttribute SysDepartment sysDepartment) {
-        Wrapper<SysDepartment> wrapper = new EntityWrapper<SysDepartment>();
-        if (StrUtils.isNotEmpty(sysDepartment.getName())) {
-            wrapper.like("t.name", sysDepartment.getName());
-        }
-        if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy("t." + bean.getOrderBy());
-        } else {
-            wrapper.orderBy("t.id desc");
-        }
-
-        Page<SysDepartment> pageData = service.selectDepartmentPage(bean.getPagination(), wrapper);
-
+    public Object jqgrid(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        PageInfo<SysDepartment> pageData = service.selectDepartmentPage(query);
         return getJqgridList(pageData);
     }
 

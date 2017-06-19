@@ -1,8 +1,8 @@
 package com.jflyfox.dudu.module.system.service;
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.IBaseService;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.model.SysDepartment;
 
 /**
@@ -16,11 +16,10 @@ public interface IDepartmentService extends IBaseService<SysDepartment> {
     /**
      * 分页查询
      *
-     * @param page
-     * @param wrapper
+     * @param query
      * @return
      */
-    Page<SysDepartment> selectDepartmentPage(Page<SysDepartment> page, Wrapper<SysDepartment> wrapper);
+    PageInfo<SysDepartment> selectDepartmentPage(Query query);
 
     /**
      * 获取部门下拉框

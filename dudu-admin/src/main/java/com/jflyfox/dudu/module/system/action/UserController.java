@@ -1,12 +1,11 @@
 package com.jflyfox.dudu.module.system.action;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseController;
-import com.jflyfox.dudu.component.model.JqgridBean;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.component.model.resubmit.SameUrlData;
 import com.jflyfox.dudu.component.util.EncryptUtils;
+import com.jflyfox.dudu.module.admin.model.TbContact;
 import com.jflyfox.dudu.module.system.model.SysDepartment;
 import com.jflyfox.dudu.module.system.model.SysRole;
 import com.jflyfox.dudu.module.system.model.SysUser;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户 控制层
@@ -114,28 +114,10 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/jqgrid")
-    public Object jqgrid(JqgridBean bean, @ModelAttribute SysUser attr) {
-        Wrapper<SysUser> wrapper = new EntityWrapper<>();
-        if (StrUtils.isNotEmpty(attr.getUsername())) {
-            wrapper.like("t.username", attr.getUsername());
-        }
-        if (StrUtils.isNotEmpty(attr.getRealname())) {
-            wrapper.like("t.realname", attr.getRealname());
-        }
-        if (attr.getUsertype() != null && attr.getUsertype() > 0) {
-            wrapper.eq("t.usertype", attr.getUsertype());
-        }
-        if (attr.getDepartid() != null && attr.getDepartid() > 0) {
-            wrapper.eq("t.departid", attr.getDepartid());
-        }
-        if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy("t." + bean.getOrderBy());
-        } else {
-            wrapper.orderBy("t.id desc");
-        }
-
-        Page<SysUser> pageData = service.selectUserPage(bean.getPagination(), wrapper);
-
+    public Object jqgrid(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        PageInfo<SysUser> pageData = service.selectUserPage(query);
         return getJqgridList(pageData);
     }
 

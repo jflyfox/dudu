@@ -3,8 +3,10 @@ package com.jflyfox.dudu.module.system.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.SqlRunner;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.common.SystemConstants;
 import com.jflyfox.dudu.module.system.dao.RoleMapper;
 import com.jflyfox.dudu.module.system.model.SysMenu;
@@ -35,9 +37,10 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, SysRole> implem
     @Autowired
     private IRolemenuService roleMenuService;
 
-    public Page<SysRole> selectRolePage(Page<SysRole> page, Wrapper<SysRole> wrapper) {
-        page.setRecords(baseMapper.selectRolePage(page, wrapper));
-        return page;
+    public PageInfo<SysRole> selectRolePage(Query query) {
+        PageHelper.startPage(query.getPage(), query.getRows());
+        PageInfo<SysRole> pageInfo = new PageInfo<SysRole>(baseMapper.selectRolePage(query));
+        return pageInfo;
     }
 
     public List<SysMenu> getListByParentid(long parentid) {

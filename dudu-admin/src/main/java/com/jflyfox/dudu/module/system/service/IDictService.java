@@ -1,8 +1,8 @@
 package com.jflyfox.dudu.module.system.service;
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.IBaseService;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.model.SysDict;
 
 /**
@@ -15,10 +15,9 @@ public interface IDictService extends IBaseService<SysDict> {
     /**
      * 分页查询
      *
-     * @param page
-     * @param wrapper
+     * @param query
      * @return
      */
-    Page<SysDict> selectDictPage(Page<SysDict> page, Wrapper<SysDict> wrapper);
+    PageInfo<SysDict> selectDictPage(Query query);
 
 }

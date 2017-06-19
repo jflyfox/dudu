@@ -1,8 +1,8 @@
 package com.jflyfox.dudu.module.system.service;
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.IBaseService;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.model.SysConfig;
 
 import java.util.List;
@@ -17,11 +17,10 @@ public interface IConfigService extends IBaseService<SysConfig> {
     /**
      * 分页查询
      *
-     * @param page
-     * @param wrapper
+     * @param query
      * @return
      */
-    Page<SysConfig> selectConfigPage(Page<SysConfig> page, Wrapper<SysConfig> wrapper);
+    PageInfo<SysConfig> selectConfigPage(Query query);
 
     /**
      * 类型列表

@@ -2,18 +2,18 @@ package com.jflyfox.dudu.module.system.action;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseController;
-import com.jflyfox.dudu.component.model.JqgridBean;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.component.model.resubmit.SameUrlData;
 import com.jflyfox.dudu.module.system.model.SysDict;
 import com.jflyfox.dudu.module.system.service.IDictService;
-import com.jflyfox.util.StrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据字典主表 控制层
@@ -93,19 +93,10 @@ public class DictController extends BaseController {
     }
 
     @RequestMapping(value = "/jqgrid")
-    public Object jqgrid(JqgridBean bean, @ModelAttribute SysDict attr) {
-        Wrapper<SysDict> wrapper = new EntityWrapper<>();
-        if (StrUtils.isNotEmpty(attr.getName())) {
-            wrapper.like("t.name", attr.getName());
-        }
-        if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy("t." + bean.getOrderBy());
-        } else {
-            wrapper.orderBy("t.id desc");
-        }
-
-        Page<SysDict> pageData = service.selectDictPage(bean.getPagination(), wrapper);
-
+    public Object jqgrid(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        PageInfo<SysDict> pageData = service.selectDictPage(query);
         return getJqgridList(pageData);
     }
 

@@ -1,17 +1,16 @@
 package com.jflyfox.dudu.module.system.action;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseController;
-import com.jflyfox.dudu.component.model.JqgridBean;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.component.model.resubmit.SameUrlData;
 import com.jflyfox.dudu.module.system.model.SysConfig;
 import com.jflyfox.dudu.module.system.service.IConfigService;
-import com.jflyfox.util.StrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
 
 /**
  * 系统配置表 控制层
@@ -100,36 +99,10 @@ public class ConfigController extends BaseController {
     }
 
     @RequestMapping(value = "/jqgrid")
-    public Object jqgrid(JqgridBean bean, @ModelAttribute SysConfig attr, @RequestParam(required = false) Integer operType) {
-        Wrapper<SysConfig> wrapper = new EntityWrapper<>();
-        if (StrUtils.isNotEmpty(attr.getName())) {
-            wrapper.like("t.name", attr.getName());
-        }
-        if (StrUtils.isNotEmpty(attr.getKey())) {
-            wrapper.like("t.key", attr.getKey());
-        }
-        if (StrUtils.isNotEmpty(attr.getValue())) {
-            wrapper.like("t.value", attr.getValue());
-        }
-        if (attr.getType() != null && attr.getType() > 0) {
-            wrapper.eq("t.type", attr.getType());
-        }
-
-        operType = operType == null ? 1 : operType;
-        if (operType == 1) {
-            wrapper.ne("t.type", 0);
-        } else {
-            wrapper.eq("t.type", 0);
-        }
-
-        if (StrUtils.isNotEmpty(bean.getOrderBy())) {
-            wrapper.orderBy("t." + bean.getOrderBy());
-        } else {
-            wrapper.orderBy("t.id desc");
-        }
-
-        Page<SysConfig> pageData = service.selectConfigPage(bean.getPagination(), wrapper);
-
+    public Object jqgrid(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params);
+        PageInfo<SysConfig> pageData = service.selectConfigPage(query);
         return getJqgridList(pageData);
     }
 

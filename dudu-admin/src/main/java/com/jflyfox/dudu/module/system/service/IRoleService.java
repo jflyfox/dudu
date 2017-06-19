@@ -1,8 +1,8 @@
 package com.jflyfox.dudu.module.system.service;
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.IBaseService;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.model.SysMenu;
 import com.jflyfox.dudu.module.system.model.SysRole;
 
@@ -18,11 +18,10 @@ public interface IRoleService extends IBaseService<SysRole> {
     /**
      * 分页查询
      *
-     * @param page
-     * @param wrapper
+     * @param query
      * @return
      */
-    Page<SysRole> selectRolePage(Page<SysRole> page, Wrapper<SysRole> wrapper);
+    PageInfo<SysRole> selectRolePage(Query query);
 
     /**
      * 根据父节点获取List

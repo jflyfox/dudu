@@ -2,8 +2,10 @@ package com.jflyfox.dudu.module.system.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.dao.MenuMapper;
 import com.jflyfox.dudu.module.system.model.SysMenu;
 import com.jflyfox.dudu.module.system.service.IMenuService;
@@ -19,9 +21,10 @@ import java.util.List;
 @Service
 public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, SysMenu> implements IMenuService {
 
-    public Page<SysMenu> selectMenuPage(Page<SysMenu> page, Wrapper<SysMenu> wrapper) {
-        page.setRecords(baseMapper.selectMenuPage(page, wrapper));
-        return page;
+    public PageInfo<SysMenu> selectMenuPage(Query query) {
+        PageHelper.startPage(query.getPage(), query.getRows());
+        PageInfo<SysMenu> pageInfo = new PageInfo<SysMenu>(baseMapper.selectMenuPage(query));
+        return pageInfo;
     }
 
     public String selectMenu(long selected) {

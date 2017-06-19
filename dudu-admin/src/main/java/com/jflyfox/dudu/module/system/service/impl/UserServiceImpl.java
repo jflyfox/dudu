@@ -3,8 +3,10 @@ package com.jflyfox.dudu.module.system.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.SqlRunner;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.common.SystemConstants;
 import com.jflyfox.dudu.module.system.dao.UserMapper;
 import com.jflyfox.dudu.module.system.model.SysRole;
@@ -35,9 +37,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, SysUser> implem
     @Autowired
     private IUserroleService userroleService;
 
-    public Page<SysUser> selectUserPage(Page<SysUser> page, Wrapper<SysUser> wrapper) {
-        page.setRecords(baseMapper.selectUserPage(page, wrapper));
-        return page;
+    public PageInfo<SysUser> selectUserPage(Query query) {
+        PageHelper.startPage(query.getPage(), query.getRows());
+        PageInfo<SysUser> pageInfo = new PageInfo<SysUser>(baseMapper.selectUserPage(query));
+        return pageInfo;
     }
 
     @Override
