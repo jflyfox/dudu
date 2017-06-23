@@ -1,6 +1,8 @@
 package com.jflyfox.dudu.test.mybatis;
 
 import com.baomidou.mybatisplus.mapper.SqlRunner;
+import com.jflyfox.dudu.component.config.mybatis.DBTypeEnum;
+import com.jflyfox.dudu.component.config.mybatis.DbContextHolder;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +21,14 @@ public class TestMybatisPlus {
 
     @Test
     public void test() {
+        DbContextHolder.setDbType(DBTypeEnum.dataSource);
         boolean flag = SqlRunner.db().delete("delete from sys_user_role where userid = ? ", 1);
+        Assert.assertTrue(flag);
+        DbContextHolder.setDbType(DBTypeEnum.app);
+        flag = SqlRunner.db().delete("delete from sys_user_role where userid = ? ", 1);
+        Assert.assertTrue(flag);
+        DbContextHolder.setDbType(DBTypeEnum.admin);
+        flag = SqlRunner.db().delete("delete from sys_user_role where userid = ? ", 1);
         Assert.assertTrue(flag);
     }
 }

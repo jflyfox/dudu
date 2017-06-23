@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.config.mybatis.DBTypeEnum;
+import com.jflyfox.dudu.component.config.mybatis.DbContextHolder;
 import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.dao.DepartmentMapper;
 import com.jflyfox.dudu.module.system.model.SysDepartment;
@@ -22,6 +24,7 @@ import java.util.List;
 public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentMapper, SysDepartment> implements IDepartmentService {
 
     public PageInfo<SysDepartment> selectDepartmentPage(Query query) {
+        // DbContextHolder.setDbType(DBTypeEnum.admin);
         PageHelper.startPage(query.getPage(), query.getRows());
         PageInfo<SysDepartment> pageInfo = new PageInfo<SysDepartment>(baseMapper.selectDepartmentPage(query));
         return pageInfo;

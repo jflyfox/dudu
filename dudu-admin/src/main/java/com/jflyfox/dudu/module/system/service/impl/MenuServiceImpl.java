@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
+import com.jflyfox.dudu.component.config.mybatis.DBTypeEnum;
+import com.jflyfox.dudu.component.config.mybatis.DbContextHolder;
 import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.dao.MenuMapper;
 import com.jflyfox.dudu.module.system.model.SysMenu;
@@ -22,6 +24,7 @@ import java.util.List;
 public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, SysMenu> implements IMenuService {
 
     public PageInfo<SysMenu> selectMenuPage(Query query) {
+        // DbContextHolder.setDbType(DBTypeEnum.app);
         PageHelper.startPage(query.getPage(), query.getRows());
         PageInfo<SysMenu> pageInfo = new PageInfo<SysMenu>(baseMapper.selectMenuPage(query));
         return pageInfo;
