@@ -157,8 +157,6 @@ var ztree = {
 
 // 初始化
 jQuery(function($) {
-    //显示Menu索引
-    showMenu('page_department');
     // 刷新ztree
     ztree.refresh();
 

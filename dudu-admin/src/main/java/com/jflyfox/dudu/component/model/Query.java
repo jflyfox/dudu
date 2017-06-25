@@ -24,8 +24,24 @@ public class Query extends LinkedHashMap<String, Object> {
     private int rows;
     // 排序
     private String orderBy;
+    // 用户信息
+    private SessionUser sessionUser;
+
+    public Query(Map<String, Object> params, SessionUser sessionUser) {
+        this.sessionUser = sessionUser;
+        init(params);
+    }
 
     public Query(Map<String, Object> params) {
+        init(params);
+    }
+
+    /**
+     * 参数初始化
+     *
+     * @param params
+     */
+    private void init(Map<String, Object> params) {
         this.putAll(params);
 
         //分页参数
@@ -37,14 +53,14 @@ public class Query extends LinkedHashMap<String, Object> {
         //防止SQL注入（因为sidx、order是通过拼接SQL实现排序的，会有SQL注入风险）
         String sidx = params.get("sidx") == null ? "" : params.get("sidx").toString();
         String sord = params.get("sord") == null ? "" : params.get("sord").toString();
-        this.put("sidx", SQLFilter.sqlInject(sidx));
-        this.put("sord", SQLFilter.sqlInject(sord));
+        this.put("sidx", sidx);
+        this.put("sord", sord);
         String orderBy = "";
         if (StrUtils.isNotEmpty(sidx)) {
-            orderBy += " " + SQLFilter.sqlInject(sidx);
+            orderBy += " " + sidx;
         }
         if (StrUtils.isNotEmpty(sord)) {
-            orderBy += " " + SQLFilter.sqlInject(sord);
+            orderBy += " " + sord;
         }
         this.orderBy = orderBy;
         this.put("orderBy", orderBy);
@@ -106,5 +122,13 @@ public class Query extends LinkedHashMap<String, Object> {
 
     public void setOrderBy(String orderBy) {
         this.orderBy = orderBy;
+    }
+
+    public SessionUser getSessionUser() {
+        return sessionUser;
+    }
+
+    public void setSessionUser(SessionUser sessionUser) {
+        this.sessionUser = sessionUser;
     }
 }

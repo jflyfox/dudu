@@ -13,7 +13,7 @@ public class Constants {
     /**
      * 后台忽略路径
      */
-    public static final String[] BACK_ANON_PATHS = {"admin/login", "admin/imagecode", "admin/trans", "admin/logout"};
+    public static final String[] BACK_ANON_PATHS = {"admin/login", "admin/imagecode", "admin/captcha.jpg", "admin/trans", "admin/logout"};
 
     public static final String BACK_LOGIN_URL = "/admin/login";
 
@@ -22,6 +22,6 @@ public class Constants {
         for (int i = 0; i < BACK_PATHS.length; i++) {
             backsPatterns[i] = "/" + BACK_PATHS[i] + "/**";
         }
-        return  backsPatterns;
+        return backsPatterns;
     }
 }

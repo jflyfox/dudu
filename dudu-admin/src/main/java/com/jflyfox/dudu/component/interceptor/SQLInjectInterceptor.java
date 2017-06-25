@@ -69,15 +69,23 @@ public class SQLInjectInterceptor extends HandlerInterceptorAdapter {
         }
 
         // 判断黑名单
-        String[] inj_stra = {"script", "mid", "master", "truncate", "insert", "select", "delete", "update", "declare",
+        String[] blacks = {"script", "mid", "master", "truncate", "insert", "select", "delete", "update", "declare",
                 "iframe", "'", "onreadystatechange", "alert", "atestu", "xss", ";", "'", "\"", "<", ">", "(", ")", // ",",
                 "\\", "svg", "confirm", "prompt", "onload", "onmouseover", "onfocus", "onerror"};
+        // 判断白名单
+        String[] whites = {"updatetime", "update_time"};
 
         str = str.toLowerCase(); // sql不区分大小写
 
-        for (int i = 0; i < inj_stra.length; i++) {
-            if (str.indexOf(inj_stra[i]) >= 0) {
-                logger.error("SQLInject防攻击拦截url:" + url + "，原因：特殊字符，传入str=" + str + ",包含特殊字符：" + inj_stra[i]);
+        for (int i = 0; i < whites.length; i++) {
+            if (whites[i].equals(str)) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < blacks.length; i++) {
+            if (str.indexOf(blacks[i]) >= 0) {
+                logger.error("SQLInject防攻击拦截url:" + url + "，原因：特殊字符，传入str=" + str + ",包含特殊字符：" + blacks[i]);
                 return true;
             }
         }

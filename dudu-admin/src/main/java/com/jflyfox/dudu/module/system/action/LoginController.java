@@ -1,4 +1,4 @@
-package com.jflyfox.dudu.module.admin.action;
+package com.jflyfox.dudu.module.system.action;
 
 import com.jflyfox.dudu.component.base.BaseController;
 import com.jflyfox.dudu.component.util.ImageCode;
@@ -25,10 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * adminController
+ * loginController
  */
 @RestController
-@RequestMapping(value = "/admin")     // 通过这里配置使下面的映射都在/users下，可去除
+@RequestMapping(value = "/admin")
 public class LoginController extends BaseController {
 
     public static final String loginPage = "/pages/admin/login.html";
@@ -70,25 +70,24 @@ public class LoginController extends BaseController {
      * @author flyfox 2013-11-11
      */
     @RequestMapping(value = "/login")
-    public ModelAndView login(String username, String password, String imageCode) {
-        ModelAndView view = new ModelAndView(loginPage);
+    public Object login(String username, String password, String imageCode) {
         // 获取验证码
         String checkCode = getSessionAttr(ImageCode.class.getName());
 
         // 这种情况一般都是直接访问login了~！~
         if (StrUtils.isEmpty(imageCode)) {
-            return view;
+            return fail("验证码不能为空！");
         }
 
         if (StrUtils.isEmpty(checkCode) || !checkCode.equalsIgnoreCase(imageCode)) {
-            return view.addObject("msg", "验证码错误！");
+            return fail("验证码错误！");
         }
 
         // 初始化数据字典Map
         if (StrUtils.isEmpty(username)) {
-            return view.addObject("msg", "用户名不能为空！");
+            return fail("用户名不能为空！");
         } else if (StrUtils.isEmpty(password)) {
-            return view.addObject("msg", "密码不能为空！");
+            return fail("密码不能为空！");
         }
 
         Subject subject = SecurityUtils.getSubject();
@@ -98,35 +97,26 @@ public class LoginController extends BaseController {
         try {
             subject.login(token);
         } catch (UnknownAccountException e) {
-            return view.addObject("msg", "账号不存在！");
+            return fail("账号不存在！");
         } catch (DisabledAccountException e) {
-            return view.addObject("msg", "账号未启用！");
+            return fail("账号未启用！");
         } catch (IncorrectCredentialsException e) {
-            return view.addObject("msg", "密码错误！");
+            return fail("密码错误！");
         } catch (InvalidPermissionStringException e) {
             if ("login".equals(e.getPermissionString())) {
-                return view.addObject("msg", "您没有登录权限，请您重新输入!");
+                return fail("您没有登录权限，请您重新输入!");
             } else {
-                return view.addObject("msg", "您没有相应的权限，请您重新登录!");
+                return fail("您没有相应的权限，请您重新登录!");
             }
         } catch (Throwable e) {
             logger.error("认证异常！", e);
-            return view.addObject("msg", "认证异常！");
-        }
-
-        // TODO 首页设置 第一个页面跳转
-        String tmpMainPage = "";
-
-        if (tmpMainPage == null) {
-            view.addObject("msg", "没有权限，请联系管理员!");
-            return view;
+            return fail("认证异常！");
         }
 
         // 添加日志
         userService.saveSystemLog(getSessionUser().getId(), LogOperType.LOGIN);
 
-        view.setViewName(homePath);
-        return view;
+        return success();
     }
 
     /**
@@ -160,6 +150,19 @@ public class LoginController extends BaseController {
         }
 
         return null;
+    }
+
+    @RequestMapping(value = "/captcha.jpg")
+    public void captcha(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            ImageCode iamgecode = new ImageCode();
+            iamgecode.doGet(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @RequestMapping(value = "/trans/{path}")

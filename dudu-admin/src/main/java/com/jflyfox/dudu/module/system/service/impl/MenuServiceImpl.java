@@ -5,15 +5,22 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jflyfox.dudu.component.base.BaseServiceImpl;
-import com.jflyfox.dudu.component.config.mybatis.DBTypeEnum;
-import com.jflyfox.dudu.component.config.mybatis.DbContextHolder;
 import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.dao.MenuMapper;
 import com.jflyfox.dudu.module.system.model.SysMenu;
+import com.jflyfox.dudu.module.system.model.SysRoleMenu;
+import com.jflyfox.dudu.module.system.model.SysUserRole;
 import com.jflyfox.dudu.module.system.service.IMenuService;
+import com.jflyfox.dudu.module.system.service.IRolemenuService;
+import com.jflyfox.dudu.module.system.service.IUserService;
+import com.jflyfox.dudu.module.system.service.IUserroleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 菜单 服务层口层
@@ -22,6 +29,52 @@ import java.util.List;
  */
 @Service
 public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, SysMenu> implements IMenuService {
+
+    @Autowired
+    private IUserService userService;
+    @Autowired
+    private IUserroleService userroleService;
+    @Autowired
+    private IRolemenuService rolemenuService;
+
+    public List<SysMenu> listUserMenu(Query query) {
+        // 权限处理,获取所有菜单信息；
+        Wrapper<SysMenu> menuWrapper = new EntityWrapper<>();
+        menuWrapper.orderBy("sort,id desc");
+        List<SysMenu> menuList = selectList(menuWrapper);
+
+        final Map<Long, List<SysMenu>> menus;
+        Function<SysMenu, Long> groupingByFunc = (SysMenu s) -> s.getParentid();
+//        if (userinfo.getUsertype() == 1) {
+            menus = menuList.stream().collect(Collectors.groupingBy(groupingByFunc));
+//        } else {
+//            // 获取用户角色
+//            Wrapper<SysUserRole> userroleWrapper = new EntityWrapper<>();
+//            userroleWrapper.eq("userid", userinfo.getId());
+//            List<SysUserRole> userRoleList = userroleService.selectList(userroleWrapper);
+//            List<Long> roleidList = userRoleList.stream().map(userRole -> userRole.getRoleid()).collect(Collectors.toList());
+//
+//            // 获取用户菜单
+//            Wrapper<SysRoleMenu> rolemenuWrapper = new EntityWrapper<>();
+//            rolemenuWrapper.in("roleid", roleidList);
+//            List<SysRoleMenu> roleMenuList = rolemenuService.selectList(rolemenuWrapper);
+//            List<Long> menuidList = roleMenuList.stream().map(roleMenu -> roleMenu.getMenuid()).collect(Collectors.toList());
+//
+//            // 只展示用户能访问的数据
+//            menus = menuList.stream().filter(menu -> menuidList.contains(menu.getId())).collect(Collectors.groupingBy(groupingByFunc));
+//        }
+
+        // 4. 按照parentid分组，返回菜单数据（key改为字符串便于前台获取，key为0的为跟目录）
+        if (menus.get(0L) == null)
+            return null;
+
+        List<SysMenu> userMenuList = menus.get(0L);
+        userMenuList.forEach(menu -> {
+            menu.setChilds(menus.get(menu.getId()));
+        });
+
+        return userMenuList;
+    }
 
     public PageInfo<SysMenu> selectMenuPage(Query query) {
         // DbContextHolder.setDbType(DBTypeEnum.app);

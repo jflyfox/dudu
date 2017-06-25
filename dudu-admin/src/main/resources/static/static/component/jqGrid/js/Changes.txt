@@ -387,7 +387,7 @@ Fixes
 
 - Removed imgpath from cell edit and inline edit modules and common module.
 This parameter is no longer valid in 3.5
-- Replace $ with jQuery in grid.common.js which causes problems when used with
+- Replace $ with jQuery in grid.common.html which causes problems when used with
 other librariers like prototype.
 - removed a checking e.srcElement from base module. jQuery allready fix this.
 - fixing the size option in select when using ajax to load selects.

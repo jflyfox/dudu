@@ -1,143 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="icon" href="${ctx}/favicon.ico" />
+	<link rel="shortcut icon" href="${ctx}/favicon.ico" />
+	<title>系统管理平台</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="${ctx}/statics/css/bootstrap.min.css">
+	<link rel="stylesheet" href="${ctx}/statics/css/font-awesome.min.css">
+	<link rel="stylesheet" href="${ctx}/statics/css/AdminLTE.min.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="${ctx}/statics/css/all-skins.min.css">
+	<link rel="stylesheet" href="${ctx}/statics/css/main.css">
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body class="hold-transition login-page">
+<div class="login-box" id="rrapp" v-cloak>
+	<div class="login-logo">
+		<b>系统管理平台</b>
+	</div>
+	<!-- /.login-logo -->
+	<div class="login-box-body">
+		<p class="login-box-msg">管理员登录</p>
+		<div v-if="error" class="alert alert-danger alert-dismissible">
+			<h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> {{errorMsg}}</h4>
+		</div>
+		<div class="form-group has-feedback">
+			<input type="text" class="form-control" v-model="username" placeholder="账号">
+			<span class="glyphicon glyphicon-user form-control-feedback"></span>
+		</div>
+		<div class="form-group has-feedback">
+			<input type="password" class="form-control" v-model="password" placeholder="密码">
+			<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+		</div>
+		<div class="form-group has-feedback">
+			<input type="text" class="form-control" v-model="captcha" @keyup.enter="login" placeholder="验证码">
+			<span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+		</div>
+		<div class="form-group has-feedback">
+			<img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
+			&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="refreshCode">点击刷新</a>
+		</div>
 
-<base href="${BASE_PATH }">
-<title>欢迎登录</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!-- //favicon.ico小图标名称 -->
-<link rel="icon" href="${BASE_PATH }favicon.ico" />
-<link rel="shortcut icon" href="${BASE_PATH }favicon.ico" />
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="cache-control" content="no-cache">
-<meta http-equiv="expires" content="0">
-<meta http-equiv="keywords" content="欢迎登录">
-<meta http-equiv="description" content="欢迎登录">
-<!-- jquery -->
-<script type="text/javascript"
-	src="static/component/jquery/jquery-1.8.2.min.js"></script>
 
-<link charset="utf-8" rel="stylesheet" href="static/login/login.css"
-	media="all">
+		<div class="row">
+			<div class="col-xs-8">
+				<div class="checkbox icheck">
+				</div>
+			</div>
+			<!-- /.col -->
+			<div class="col-xs-4">
+				<button type="button" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>
+			</div>
+			<!-- /.col -->
+		</div>
+		<!-- /.social-auth-links -->
 
-<script type="text/javascript" src="static/oauth2/oauth2.js"></script>
-<script type="text/javascript" src="static/js/encrypt/md5.js"></script>
-
+	</div>
+	<!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+<script src="${ctx}/statics/libs/jquery.min.js"></script>
+<script src="${ctx}/statics/libs/vue.min.js"></script>
+<script src="${ctx}/statics/libs/bootstrap.min.js"></script>
+<script src="${ctx}/statics/libs/jquery.slimscroll.min.js"></script>
+<script src="${ctx}/statics/libs/fastclick.min.js"></script>
+<script src="${ctx}/statics/libs/app.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/encrypt/md5.js"></script>
 <script type="text/javascript">
-	function login() {
-		var username = $('[name="username"]').val();
-		if(username==''){
-			alert('用户名不能为空！');
-			return;
-		}
-		
-		var pwd = $('[name="password"]').val();
-		if(pwd==''){
-			alert('密码不能为空！');
-			return;
-		}
-		var imageCode = $('[name="imageCode"]').val();
-		if(imageCode==''){
-			alert('验证码不能为空！');
-			return;
-		}
-		if(imageCode.length != 4){
-			alert('验证码输入错误！');
-			return;
-		}
-		
-		$('[name="password"]').val(hex_md5(pwd));
-		
-		form1.action = "admin/login";
-		form1.submit();
-		// submit_js("login_login.action", "loginform");
-	}
-	
-	function loadPicimageCode() {
-		document.getElementById("picimageCode").src = '${BASE_PATH }admin/imagecode?ran=' + Math.random();
-	}
-	
-	<!-- jQuery 当键盘敲击【ENTER】键时，系统登录 -->
-	$(document).ready(function() {
-		$("body").keydown(function(event) {
-			if (event.which == 13) {
-				login();
+	var vm = new Vue({
+		el:'#rrapp',
+		data:{
+			username: '',
+			password: '',
+			captcha: '',
+			error: false,
+			errorMsg: '',
+			src: '${ctx}/admin/captcha.jpg'
+		},
+		beforeCreate: function(){
+			if(self != top){
+				top.location.href = self.location.href;
 			}
-		});
+		},
+		methods: {
+			refreshCode: function(){
+				this.src = "${ctx}/admin/captcha.jpg?t="+$.now();
+			},
+			login: function (event) {
+				if(vm.username==''){
+					alert('用户名不能为空！');
+					return;
+				}
+
+				if(vm.password==''){
+					alert('密码不能为空！');
+					return;
+				}
+				if(vm.captcha==''){
+					alert('验证码不能为空！');
+					return;
+				}
+				if(vm.captcha.length != 4){
+					alert('验证码输入错误！');
+					return;
+				}
+
+				var data = "username="+vm.username+"&password="+hex_md5(vm.password)+"&imageCode="+vm.captcha;
+				$.ajax({
+					type: "POST",
+					url: "${ctx}/admin/login",
+					data: data,
+					dataType: "json",
+					success: function(result){
+						if(result.code == 0){//登录成功
+							parent.location.href ='${ctx}/admin/home';
+						}else{
+							vm.error = true;
+							vm.errorMsg = result.msg;
+
+							vm.refreshCode();
+						}
+					}
+				});
+			}
+		}
 	});
 </script>
-<style type="text/css">
-body {
-	opacity: 1;
-	background-image: url(static/login/bg/bg1.jpg);
-	background-size: cover;
-	background-repeat: no-repeat;
-	width: 100%;
-	height: 100%;
-}
-</style>
-</head>
-<body>
-
-	<div class="login login-modern login-position">
-		<form id="form1" action="" method="post" class="ui-form">
-			<input type="hidden" name="pre_page" value="" />
-
-			<fieldset>
-				<h2 class="ui-form-title">用户登陆</h2>
-
-				<div class="ui-form-item ui-form-item-focus">
-					<label class="ui-label"> <span
-						class="ui-icon ui-icon-userDEF">账户名：</span>
-					</label> <input type="text" class="ui-input ui-input-normal"
-						name="username" autofocus="autofocus" autocomplete="off"
-						tabindex="1" value="" maxlength="100" placeholder="登录账号">
-				</div>
-
-				<div class="ui-form-item ui-form-item-focus" id="J-username">
-					<label class="ui-label"> <span
-						class="ui-icon ui-icon-securityON">登录密码：</span>
-					</label> <input type="password" class="ui-input ui-input-normal"
-						name="password" autocomplete="off" tabindex="2" value=""
-						maxlength="100" placeholder="登录密码">
-				</div>
-				
-				<div class="ui-form-item ui-form-item-focus" id="J-username">
-					<label class="ui-label">
-					<span class="ui-icon ui-icon-checkcodeT">验证码：</span>
-					</label> 
-					<input type="text" class="ui-input ui-input-normal" name="imageCode"  style="width: 90px;"
-					autocomplete="off" tabindex="2" value="" maxlength="100" placeholder="验证码">
-					<div class="input-group-addon" style="">
-			     			<img id="picimageCode"  width="60" height="26"  
-			     				 style="line-height: 50px;height: 40px;margin-left: 10px; cursor:pointer;"
-				 			 src="${BASE_PATH }admin/imagecode" title="更换一张验证码图片" onclick="loadPicimageCode()"/>
-			     	</div>
-				</div>
-
-				<% if(isNotEmpty(msg)) { %>
-				<div  class="ui-form-text" style="color: #FFCC00;font-weight:bold ;">
-				提示：${msg!}
-				</div>
-				<% } %>
-
-				<div class="ui-form-item ui-form-item-30pd">
-					<input type="button" onclick="login();" value="登 录"
-						class="ui-button" tabindex="3">
-					<p class="ui-form-other">
-						<span class="login_text">其他帐号登录：</span> <a class="login_qq"
-							href="javascript:void(0);" onclick='toLogin("qq")' title="qq登录"></a>
-						<a class="login_baidu" href="javascript:void(0);"
-							onclick='toLogin("baidu")' title="百度登录"></a>
-						<!-- 
-			<a class="login_sina" href="javascript:void(0);" onclick='toLogin("sina")' title="新浪登录"></a>
-			 -->
-					</p>
-				</div>
-			</fieldset>
-		</form>
-	</div>
-
 </body>
 </html>
-

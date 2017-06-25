@@ -52,8 +52,6 @@ var oper = {
 
 // 初始化
 jQuery(function($) {
-    // 显示Menu索引
-    showMenu('page_dictdetail');
     // 下拉框初始化
     dudu.select("system/dict/data",$('#dictType'),'name','type',null);
 

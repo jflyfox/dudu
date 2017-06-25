@@ -1,11 +1,12 @@
 package com.jflyfox.dudu.module.system.model;
 
-import com.jflyfox.dudu.component.base.BaseModel;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.jflyfox.dudu.component.base.BaseModel;
 
 import java.io.Serializable;
+import java.util.List;
 
 @TableName(value = "sys_menu")
 public class SysMenu extends BaseModel implements Serializable {
@@ -36,6 +37,8 @@ public class SysMenu extends BaseModel implements Serializable {
     // columns END
     @TableField(exist = false)
     private String parentName;  // 上级名称
+    @TableField(exist = false)
+    private List<SysMenu> childs;  // 下级菜单列表
 
     public Serializable pkVal() {
         return id;
@@ -120,6 +123,14 @@ public class SysMenu extends BaseModel implements Serializable {
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public List<SysMenu> getChilds() {
+        return childs;
+    }
+
+    public void setChilds(List<SysMenu> childs) {
+        this.childs = childs;
     }
 
     @Override

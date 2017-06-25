@@ -21,7 +21,7 @@ import java.util.Random;
 public class ImageCode extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Font mFont = new Font("Arial", Font.BOLD, 15); // 设置字体
 	private int lineWidth = 2; // 干扰线的长度=1.414*lineWidth
 	private int width = 60; // 定义图形大小
@@ -146,5 +146,25 @@ public class ImageCode extends HttpServlet {
 
 		// 输出图象到页面
 		ImageIO.write(image, "PNG", response.getOutputStream());
+	}
+
+	public void setmFont(Font mFont) {
+		this.mFont = mFont;
+	}
+
+	public void setLineWidth(int lineWidth) {
+		this.lineWidth = lineWidth;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 }

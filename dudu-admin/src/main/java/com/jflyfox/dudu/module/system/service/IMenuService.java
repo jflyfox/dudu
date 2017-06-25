@@ -5,6 +5,8 @@ import com.jflyfox.dudu.component.base.IBaseService;
 import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.module.system.model.SysMenu;
 
+import java.util.List;
+
 /**
  * 菜单 服务接口层
  *
@@ -38,5 +40,13 @@ public interface IMenuService extends IBaseService<SysMenu> {
      * @return
      */
     String selectMenu(long selected, long selfId);
+
+    /**
+     * 获取当前用户菜单列表
+     *
+     * @param query
+     * @return
+     */
+    List<SysMenu> listUserMenu(Query query);
 
 }

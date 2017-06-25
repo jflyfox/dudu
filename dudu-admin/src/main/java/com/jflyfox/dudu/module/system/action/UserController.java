@@ -150,4 +150,15 @@ public class UserController extends BaseController {
         return success();
     }
 
+    /**
+     * 保存角色信息
+     * <p>
+     * 2015年4月28日 下午3:18:33 flyfox 369191470@qq.com
+     */
+    @RequestMapping(value = "/info")
+    public Object info(@RequestParam Long userid, @RequestParam String roleids) {
+        SysUser model = service.selectById(getSessionUser().getId());
+        return success(model);
+    }
+
 }

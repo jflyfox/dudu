@@ -7,13 +7,20 @@ import com.jflyfox.dudu.component.base.BaseController;
 import com.jflyfox.dudu.component.model.Query;
 import com.jflyfox.dudu.component.model.resubmit.SameUrlData;
 import com.jflyfox.dudu.module.system.model.SysMenu;
+import com.jflyfox.dudu.module.system.model.SysRoleMenu;
+import com.jflyfox.dudu.module.system.model.SysUserRole;
 import com.jflyfox.dudu.module.system.service.IMenuService;
+import com.jflyfox.dudu.module.system.service.IRolemenuService;
+import com.jflyfox.dudu.module.system.service.IUserService;
+import com.jflyfox.dudu.module.system.service.IUserroleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 菜单 控制层
@@ -121,6 +128,14 @@ public class MenuController extends BaseController {
         Query query = new Query(params);
         PageInfo<SysMenu> pageData = service.selectMenuPage(query);
         return getJqgridList(pageData);
+    }
+
+    @RequestMapping(value = "/user")
+    public Object user(@RequestParam Map<String, Object> params) {
+        //查询列表数据
+        Query query = new Query(params, getSessionUser());
+        List<SysMenu> menus = service.listUserMenu(query);
+        return success(menus);
     }
 
 }
