@@ -62,4 +62,5 @@
 	</root>
 	<logger name="com.jflyfox.dudu" level="DEBUG" />
 	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.web.servlet.DispatcherServlet" level="DEBUG" />
 </configuration>

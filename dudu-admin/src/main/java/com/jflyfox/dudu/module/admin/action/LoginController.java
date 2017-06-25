@@ -1,4 +1,4 @@
-package com.jflyfox.dudu.module.system.action;
+package com.jflyfox.dudu.module.admin.action;
 
 import com.jflyfox.dudu.component.base.BaseController;
 import com.jflyfox.dudu.component.util.ImageCode;
@@ -33,6 +33,7 @@ public class LoginController extends BaseController {
 
     public static final String loginPage = "/pages/admin/login.html";
     public static final String homePage = "/pages/admin/home/home.html";
+    public static final String welcomePage = "/pages/admin/home/welcome.html";
     public static final String homePath = "redirect:/admin/home";
 
     @Autowired
@@ -61,6 +62,13 @@ public class LoginController extends BaseController {
         }
 
         view.setViewName(homePage);
+        return view;
+    }
+
+    @RequestMapping(value = "/welcome")
+    public ModelAndView welcome() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName(welcomePage);
         return view;
     }
 
